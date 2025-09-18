@@ -14,6 +14,7 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from datetime import timedelta
+from django.templatetags.static import static
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,9 @@ SECRET_KEY = 'django-insecure-r77!$2#2q)kaw4a^%8oe94^re#i(-89_v3_2==&k779fba@)kc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3cca15b4ac85.ngrok-free.app','localhost','127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = ['https://3cca15b4ac85.ngrok-free.app']
 
 # Application definition
 
@@ -126,22 +129,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATIC_DIR = BASE_DIR / "static_src"
+STATICFILES_DIRS = [STATIC_DIR]
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
-
-
-
 UNFOLD = {
     "SITE_TITLE": "ALPHA",
     "SITE_HEADER": "ALPHA",
-    "SITE_SUBHEADER": "ADMINISTRATION",
+    "SITE_SUBHEADER": "ADMINISTRATION OF ALPHA",
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/svg+xml",
+            "href": lambda request: static("alpha-logo.png"),
+        },
+    ],
+
+    "SITE_ICON": {
+        "light": lambda request: static("alpha-logo.png"),  # light mode
+        "dark": lambda request: static("alpha-logo.png"),  # dark mode
+    },
+
      "COLORS": {
         "primary": {
             "50": "240, 248, 255",   # очень светлый голубой (почти белый)
@@ -158,9 +176,9 @@ UNFOLD = {
             },
     },
     "SIDEBAR": {
-        "show_search": False,       # Search in applications and models names
-        "command_search": False,    # Replace the sidebar search with the command search
-        "show_all_applications": False,  # Dropdown with all applications and models
+        "show_search": True,       # Search in applications and models names
+        "command_search": True,    # Replace the sidebar search with the command search
+        "show_all_applications": True,  # Dropdown with all applications and models
         "navigation": [
             # {
             #     "title": _("DEPARTMENTS"),
@@ -213,16 +231,9 @@ AUTH_USER_MODEL = "userapp.User"
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
-    # 'SECURITY_DEFINITIONS': {
-    #     'BearerAuth': {
-    #         'type': 'apiKey',
-    #         'in': 'header',
-    #         'name': 'Authorization',
-    #         'description': 'Enter your JWT token as `Bearer <token>`',
-    #     },
-    # },
+    'SECURITY_DEFINITIONS': None,
+    'SUPPORTED_SUBMIT_METHODS': [],
 }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
