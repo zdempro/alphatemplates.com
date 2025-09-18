@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
 
     'userapp',
 ]
@@ -107,9 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
@@ -126,7 +129,79 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTH_USER_MODEL = "userapp.User"
 
 
-AUTHENTICATION_BACKENDS =['userapp.backends.EmailBackend']
+
+
+
+UNFOLD = {
+    "SITE_TITLE": "ALPHA",
+    "SITE_HEADER": "ALPHA",
+    "SITE_SUBHEADER": "ADMINISTRATION",
+     "COLORS": {
+        "primary": {
+            "50": "240, 248, 255",   # очень светлый голубой (почти белый)
+            "100": "210, 230, 255",  # нежно-голубой
+            "200": "175, 210, 250",  # светлый голубой
+            "300": "130, 180, 240",  # спокойный голубой
+            "400": "80, 150, 230",   # насыщенный голубой
+            "500": "37, 99, 235",    # основной синий (как tailwind blue-600)
+            "600": "30, 80, 200",    # более тёмный акцент
+            "700": "25, 65, 160",    # глубокий синий
+            "800": "20, 50, 120",    # тёмно-синий
+            "900": "15, 35, 85",     # почти navy
+            "950": "10, 20, 45",     
+            },
+    },
+    "SIDEBAR": {
+        "show_search": False,       # Search in applications and models names
+        "command_search": False,    # Replace the sidebar search with the command search
+        "show_all_applications": False,  # Dropdown with all applications and models
+        "navigation": [
+            # {
+            #     "title": _("DEPARTMENTS"),
+            #     "separator": True,   # Top border
+            #     "collapsible": True, # Collapsible group of links
+            #     "items": [
+            #         {
+            #             "title": _("News"),
+            #             "icon": "note_stack",  # Supported icon set: https://fonts.google.com/icons
+            #             "link": reverse_lazy("admin:unfoldapp_news_changelist"),
+            #             "permission": lambda request: request.user.is_superuser,
+            #         },
+            #         {
+            #             "title": _("Category"),
+            #             "icon": "format_list_bulleted",
+            #             "link": reverse_lazy("admin:unfoldapp_category_changelist"),
+            #         },
+            #     ],
+            # },
+            {
+                "title": _("USERS & GROUPS"),
+                "separator": True,   # Top border
+                "collapsible": True, # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:userapp_user_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+
+                    },
+                    
+                ],
+            },
+        ],
+    },
+
+}
+
+
+AUTH_USER_MODEL = "userapp.User"

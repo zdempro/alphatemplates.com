@@ -1,30 +1,37 @@
 from django.contrib import admin
-from django.contrib.auth.models import User,Group
-from userapp.forms import EmailAuthenticationForm
+from django.contrib.auth.models import Group
 from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.utils.translation import gettext_lazy as _
+from .models import User
 from . import forms
-admin.site.login_form = EmailAuthenticationForm
 
-admin.site.unregister(User)
 admin.site.unregister(Group)
 
 
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
-    form = UserChangeForm
+    form = forms.CustomUserChangeForm
     add_form = forms.CustomUserCreationForm
     change_password_form = AdminPasswordChangeForm
-
-    list_display = ['username','email','date_joined'] 
+     
+    list_display = ['name','email','date_joined','last_login','is_active','is_staff','is_superuser']
+    ordering =['email']
     fieldsets = (
-        (None, {"fields": ("username", "email", "password")}),
+        (None, {"fields": ("email", "name", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "name", "password1", "password2", "is_active", "is_staff", "is_superuser"),
+        }),
     )
 
     

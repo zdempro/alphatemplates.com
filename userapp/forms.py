@@ -1,20 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from unfold.forms import AuthenticationForm,UserCreationForm,UserChangeForm
+from unfold.forms import UserCreationForm,UserChangeForm
 from django.contrib.auth import get_user_model
-
-class EmailAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(
-        label="Email", 
-        widget=forms.TextInput(attrs={"autofocus": True})
-    )
 
 User = get_user_model()
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True,label='Email')
 
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("name", "email", "password1", "password2")  # 👈 email включаем как поле модели
 
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ("name", "email", "first_name", "last_name", "is_active", "is_staff")
