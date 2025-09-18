@@ -23,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-r77!$2#2q)kaw4a^%8oe94^re#i(-89_v3_2==&k779fba@)kc'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
+    "rest_framework",
 
     'userapp',
 ]
@@ -205,3 +205,10 @@ UNFOLD = {
 
 
 AUTH_USER_MODEL = "userapp.User"
+
+
+# REST_FRAMEWORK = {
+#     "DEFAULT_AUTHENTICATION_CLASSES": [
+#         "rest_framework_simplejwt.authentication.JWTAuthentication",  # 👈 например
+#     ],
+# }

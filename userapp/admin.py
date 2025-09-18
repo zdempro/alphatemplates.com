@@ -14,12 +14,16 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
+
     form = forms.CustomUserChangeForm
     add_form = forms.CustomUserCreationForm
     change_password_form = AdminPasswordChangeForm
      
     list_display = ['name','email','date_joined','last_login','is_active','is_staff','is_superuser']
-    ordering =['email']
+    list_display_links = ['name','email']
+    readonly_fields = ['date_joined','last_login']
+    ordering = ['-email'] 
+       
     fieldsets = (
         (None, {"fields": ("email", "name", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name")}),
@@ -34,7 +38,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         }),
     )
 
-    
 
 
 @admin.register(Group)
