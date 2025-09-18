@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.contrib.auth import authenticate
 User = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -23,3 +24,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+    
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        user = authenticate(email=attrs['email'],password=attrs['password'])
+        
+        if not user:
+            raise serializers.ValidationError("Неверный email или пароль")
+        
+        if not user.is_active:
+            raise serializers.ValidationError("Аккаунт деактивирован")
+        
+        attrs['user']=user
+
+        return attrs
+    
+class UserLogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

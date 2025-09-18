@@ -7,6 +7,7 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User
 from . import forms
+from rest_framework_simplejwt.token_blacklist import models
 
 admin.site.unregister(Group)
 
@@ -22,7 +23,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     list_display = ['name','email','date_joined','last_login','is_active','is_staff','is_superuser']
     list_display_links = ['name','email']
     readonly_fields = ['date_joined','last_login']
-    ordering = ['-email'] 
+    ordering = ['email'] 
        
     fieldsets = (
         (None, {"fields": ("email", "name", "password")}),
@@ -43,3 +44,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     pass
+
+admin.site.unregister(models.BlacklistedToken)
+admin.site.unregister(models.OutstandingToken)
